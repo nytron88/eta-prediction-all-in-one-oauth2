@@ -1,12 +1,15 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
+import { CodeSnippet } from "../components/code-snippet";
 import { PageLayout } from "../components/page-layout";
-import { getScientistResource } from "../services/api.service";
+import { getPermissionsResource, getScientistResource } from "../services/api.service";
 import Chart from "react-google-charts";
+import { first } from "lodash";
 
 export const ScientistPage = () => {
   const { getAccessTokenSilently } = useAuth0();
   const [accessToken, setAccessToken] = useState("");
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [message, setMessage] = useState("");
   const [binsDisplay, setBinsDisplay] = useState([
     ["Category", "Value"],
@@ -26,15 +29,30 @@ export const ScientistPage = () => {
     const getAccessToken = async () => {
       const accessToken = await getAccessTokenSilently();
       setAccessToken(accessToken);
-    }
+    };
 
     getAccessToken();
 
   }, [getAccessTokenSilently]);
 
   useEffect(() => {
-    const interval = setInterval(updateTable, 1000);
-    return () => clearInterval(interval);
+    const getPermission = async () => {
+      const firstTimeAccessToken = await getAccessTokenSilently();
+      const { data, error } = await getPermissionsResource(firstTimeAccessToken);
+      const isAuthorized = data.permissions.indexOf("get:eta-data") > -1;
+      setIsAuthorized(isAuthorized)
+      
+    };
+
+    getPermission();
+
+  }, []);
+
+  useEffect(() => {
+    if (isAuthorized) {
+      const interval = setInterval(updateTable, 5000);
+      return () => clearInterval(interval);
+    }
   });
   
   const updateTable = async () => {
@@ -106,37 +124,65 @@ export const ScientistPage = () => {
     return options;
   };
 
-  return (
-    <PageLayout>
-      <div className="content-layout">
-        <h1 id="page-title" className="content__title">
-          Scientist Zone
-        </h1>
-        <div className="content__body">
-          <p id="page-description">
-            <span>
-              This page retrieves the ETA prediction data enetred by users and display it on a self-refreshing histogram.
-            </span>
-            <span>
+  if (!isAuthorized) {
+    return (
+      <PageLayout>
+        <div className="content-layout">
+          <h1 id="page-title" className="content__title">
+            Protected Page
+          </h1>
+          <div className="content__body">
+            <p id="page-description">
+              <span>
+              This page retrieves the ETA prediction data enetred by users and displays it on a self-refreshing histogram.
+              </span>
+              <span>
               <strong>
                 Only authenticated users with the{" "}
                 <code>scientist</code> role should access this
                 page.
               </strong>
             </span>
-          </p>
-          {/* <CodeSnippet title="Admin Message" code={message} /> */}
-          <div>
-            <Chart
-            className="sum-container"
-              chartType="ColumnChart" 
-              height="400px"
-              data={binsDisplay}
-              options={optionsLoad()}
-            />
+            </p>
+            <CodeSnippet title="Unauthorized!!!" code="You don't have permission to access this resource. Please contact the administrator." />
           </div>
         </div>
-      </div>
-    </PageLayout>
-  );
+      </PageLayout>
+    );
+
+  } else {
+    return (
+      <PageLayout>
+        <div className="content-layout">
+          <h1 id="page-title" className="content__title">
+            Scientist Zone
+          </h1>
+          <div className="content__body">
+            <p id="page-description">
+              <span>
+                This page retrieves the ETA prediction data enetred by users and displays it on a self-refreshing histogram.
+              </span>
+              <span>
+                <strong>
+                  Only authenticated users with the{" "}
+                  <code>scientist</code> role should access this
+                  page.
+                </strong>
+              </span>
+            </p>
+            
+            <div>
+              <Chart
+              className="sum-container"
+                chartType="ColumnChart" 
+                height="400px"
+                data={binsDisplay}
+                options={optionsLoad()}
+              />
+            </div>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
 };

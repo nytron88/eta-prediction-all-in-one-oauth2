@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { PageLoader } from "./components/page-loader";
 import { AuthenticationGuard } from "./components/authentication-guard";
@@ -12,7 +12,6 @@ import { ProfilePage } from "./pages/profile-page";
 import { DeveloperPage } from "./pages/developer-page";
 import { UserPage } from "./pages/user-page";
 import { ScientistPage } from "./pages/scientist-page";
-
 
 export const App = () => {
   const { isLoading } = useAuth0();

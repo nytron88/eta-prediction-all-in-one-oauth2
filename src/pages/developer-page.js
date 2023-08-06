@@ -1,25 +1,39 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
-// import { CodeSnippet } from "../components/code-snippet";
+import { CodeSnippet } from "../components/code-snippet";
 import { PageLayout } from "../components/page-layout";
-import { postDeveloperResource } from "../services/api.service";
+import { getPermissionsResource, postDeveloperResource } from "../services/api.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const DeveloperPage = () => {
   const { getAccessTokenSilently } = useAuth0();
   const [accessToken, setAccessToken] = useState("");
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
+useEffect(() => {
     const getAccessToken = async () => {
       const accessToken = await getAccessTokenSilently();
       setAccessToken(accessToken);
-    }
+    };
 
     getAccessToken();
 
   }, [getAccessTokenSilently]);
+
+  useEffect(() => {
+    const getPermission = async () => {
+      const firstTimeAccessToken = await getAccessTokenSilently();
+      const { data, error } = await getPermissionsResource(firstTimeAccessToken);
+      const isAuthorized = data.permissions.indexOf("create:endpoint") > -1;
+      setIsAuthorized(isAuthorized)
+      
+    };
+
+    getPermission();
+
+  }, []);
 
 
   const handleSubmit = async (event) => {
@@ -40,8 +54,8 @@ export const DeveloperPage = () => {
         return;
     } else {
       const { responses } = await postDeveloperResource(accessToken, event.target[0].value, event.target[1].value);
-      //postDeveloperResource(accessToken, event.target[0].value, event.target[1].value);
-      toast.info('Endpoint successfully created!', {
+      if (responses[0].data.message == 'You are not a developer! Please contact the admins to give you developer permissions') {
+      toast.error('You are not a developer! Please contact the admins to give you developer permissions', {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -51,9 +65,40 @@ export const DeveloperPage = () => {
         progress: undefined,
         theme: "dark",
         });
+
+        return;
+      }
       
     }
   }
+
+    if (!isAuthorized) {
+    return (
+      <PageLayout>
+        <div className="content-layout">
+          <h1 id="page-title" className="content__title">
+            Protected Page
+          </h1>
+          <div className="content__body">
+            <p id="page-description">
+              <span>
+              This page retrieves the ETA prediction data enetred by users and displays it on a self-refreshing histogram.
+              </span>
+              <span>
+              <strong>
+                Only authenticated users with the{" "}
+                <code>scientist</code> role should access this
+                page.
+              </strong>
+            </span>
+            </p>
+            <CodeSnippet title="Unauthorized!!!" code="You don't have permission to access this resource. Please contact the administrator." />
+          </div>
+        </div>
+      </PageLayout>
+    );
+
+  } else {
 
   return (
     <PageLayout>
@@ -130,4 +175,5 @@ export const DeveloperPage = () => {
       
     </PageLayout>
   );
+    }
 };

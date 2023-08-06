@@ -28,8 +28,7 @@ export const ProfilePage = () => {
         <div className="content__body">
           <p id="page-description">
             <span>
-              You can use the <strong>ID Token</strong> to get the profile
-              information of an authenticated user.
+              You can use the <strong>Access Token</strong> to run cURL commands or use API clients like Postman.
             </span>
             <span>
               <strong>Only authenticated users can access this page.</strong>

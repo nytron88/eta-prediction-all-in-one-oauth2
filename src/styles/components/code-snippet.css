@@ -26,7 +26,7 @@
 }
 
 .code-snippet__container {
-  min-height: 32.4rem;
+  min-height: 11.0rem;
   background-color: var(--dark-aluminium);
   overflow-x: auto;
 }
@@ -41,11 +41,11 @@
 
   color: var(--white);
   font-size: 16px;
-  line-height: 32px;
+  line-height: px;
   word-wrap: break-word;
   white-space: pre-wrap;
-  inline-size: 1300px;
-  overflow-wrap: break-word;
+  /* inline-size: 1300px; */
+  /* overflow-wrap: break-word; */
 }
 
 @media only screen and (max-width: 480px) {

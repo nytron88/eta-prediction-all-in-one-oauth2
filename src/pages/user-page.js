@@ -68,7 +68,7 @@ export const UserPage = () => {
         <div className="content__body">
           <p id="page-description">
             <span align="justify">
-              Submit your ETA readings on this form. The default value of each input box is <strong>0</strong>. If you leave a box blank, then it is considered <stron>0</stron>.
+              Submit your ETA readings on this form. The default value of each input box is <strong>0</strong>. If you leave a box blank, then it is considered <strong>0</strong>.
             </span>
             <span align="justify">
             Only authenticated users with the{" "}

@@ -80,3 +80,26 @@ export const getScientistResource = async (accessToken) => {
     responses: responses1 || null
   };
 };
+
+export const getPermissionsResource = async (accessToken) => {
+  //console.log("Getting permissions")
+  const config = {
+    url: `${apiServerUrls[0]}/api/all/get_permissions`,
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  //console.log("Calling external API: " + config)
+
+  const { data, error } = await callExternalApi({ config });
+
+  //console.log(data)
+  //console.log(error)
+
+  return {
+    data: data || null,
+    error,
+  };
+};
