@@ -87,7 +87,7 @@ useEffect(() => {
               <span>
               <strong>
                 Only authenticated users with the{" "}
-                <code>scientist</code> role should access this
+                <code>developer</code> role should access this
                 page.
               </strong>
             </span>
