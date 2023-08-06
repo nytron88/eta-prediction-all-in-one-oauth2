@@ -13,16 +13,16 @@ export const ScientistPage = () => {
   const [message, setMessage] = useState("");
   const [binsDisplay, setBinsDisplay] = useState([
     ["Category", "Value"],
-    ["Sum Bin 1", 0],
-    ["Sum Bin 2", 0],
-    ["Sum Bin 3", 0],
-    ["Sum Bin 4", 0],
-    ["Sum Bin 5", 0],
-    ["Sum Bin 6", 0],
-    ["Sum Bin 7", 0],
-    ["Sum Bin 8", 0],
-    ["Sum Bin 9", 0],
-    ["Sum Bin 10", 0],
+    ["ETA 1", 0],
+    ["ETA 2", 0],
+    ["ETA 3", 0],
+    ["ETA 4", 0],
+    ["ETA 5", 0],
+    ["ETA 6", 0],
+    ["ETA 7", 0],
+    ["ETA 8", 0],
+    ["ETA 9", 0],
+    ["ETA 10", 0],
   ])
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export const ScientistPage = () => {
         }
         const newBinsDisplay = [["Category", "Value"]];
         for (let i = 0; i < finalSum.length; i++) {
-        newBinsDisplay.push([`Sum Bin ${i + 1}`, finalSum[i]]);
+        newBinsDisplay.push([`ETA ${i + 1}`, finalSum[i]]);
         }
         setBinsDisplay(newBinsDisplay);
       } else if (dataServerTwo.message.length > dataServerOne.message.length){
@@ -90,7 +90,7 @@ export const ScientistPage = () => {
         }
         const newBinsDisplay = [["Category", "Value"]];
         for (let i = 0; i < finalSum.length; i++) {
-        newBinsDisplay.push([`Sum Bin ${i + 1}`, finalSum[i]]);
+        newBinsDisplay.push([`ETA ${i + 1}`, finalSum[i]]);
         }
         setBinsDisplay(newBinsDisplay);
       }
@@ -100,7 +100,7 @@ export const ScientistPage = () => {
 
   const optionsLoad = () => {
     const options = {
-      title: "Final Sum",
+      title: "ETA Data",
       legend: { position: "none" },
       colors: ["#e7711c"],
       vAxis: {
