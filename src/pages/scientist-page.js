@@ -4,7 +4,6 @@ import { CodeSnippet } from "../components/code-snippet";
 import { PageLayout } from "../components/page-layout";
 import { getPermissionsResource, getScientistResource } from "../services/api.service";
 import Chart from "react-google-charts";
-import { first } from "lodash";
 
 export const ScientistPage = () => {
   const { getAccessTokenSilently } = useAuth0();
@@ -59,9 +58,9 @@ export const ScientistPage = () => {
     const { responses } = await getScientistResource(accessToken);
 
     const dataServerOne = responses[0].data;
-    const dataServerTwo = responses[0].data;
+    const dataServerTwo = responses[1].data;
     const errorServerOne = responses[0].error;
-    const errorServerTwo = responses[0].error;
+    const errorServerTwo = responses[1].error;
     
     if (dataServerOne.message === "You don't have access to this resource") {
       setMessage("You don't have access to this resource!")
